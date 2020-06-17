@@ -1,5 +1,7 @@
 <template>
     <div id="app">
+        <PostForm></PostForm>
+        <h1>{{postsCount}}</h1>
         <div class="post" v-for="post in allPosts" :key="post.id">
             <h2>{{post.title}}</h2>
             <p>{{post.body}}</p>
@@ -9,24 +11,30 @@
 
 <script>
     import HelloWorld from './components/HelloWorld.vue'
-    import {mapGetters} from 'vuex'
+    import PostForm from "./components/PostForm";
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: 'App',
         components: {
-            HelloWorld
+            HelloWorld,
+            PostForm
         },
         // computed: {
         //     allPosts() {
         //         return this.$store.getters.allPosts();
         //     }
         // },
-        computed: mapGetters(['allPosts']),
+        methods: mapActions(['fetchPosts']),
+        computed: mapGetters(['allPosts', 'postsCount']),
         async mounted() {
             // const res = await fetch('https://jsonplaceholder.typicode.com/posts');
             // this.posts = await res.json();
 
-              await this.$store.dispatch("fetchPosts");
+            //deprecated becouse of mapActions
+            //await this.$store.dispatch("fetchPosts");
+
+            await this.fetchPosts(4);
         }
     }
 </script>
